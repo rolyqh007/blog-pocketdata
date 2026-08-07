@@ -25,6 +25,51 @@ onRecordCreateRequest((e) => {
             // Set the generated slug to the record
         record.set("slug", slug);
     }
+
+    const content = record.get("content") || "";
+    const plainText = content.replace(/<[^>]*>/g, " ");
+    const wordCount = plainText.trim().split(/\s+/).filter(w => w.length > 0).length;
+    const minutes = Math.max(1, Math.ceil(wordCount / 200));
+    record.set("reading_time", minutes);
+
+    if (!record.get("views")) {
+        record.set("views", 0);
+    }
+
+
     // Continue with the request new version pocketbase +v0.23+
     e.next();
 }, "posts")
+
+
+// This hook is triggered before an existing record is updated in the "posts" collection.
+// It calculates the reading time based on the content field and updates the reading_time field accordingly.
+onRecordUpdateRequest((e) => {
+    const record = e.record;
+
+    const content = record.get("content") || "";
+    const plainText = content.replace(/<[^>]*>/g, " ");
+    const wordCount = plainText.trim().split(/\s+/).filter(w => w.length > 0).length;
+    const minutes = Math.max(1, Math.ceil(wordCount / 200));
+    record.set("reading_time", minutes);
+
+    e.next();
+}, "posts")
+
+
+
+// This hook is triggered when a POST request is made to the "/api/posts/{id}/view" endpoint.
+routerAdd("POST", "/api/posts/{id}/view", (e) => {
+    // Get the post ID from the request path
+    const id = e.request.pathValue("id");
+
+    try {
+        const record = e.app.findRecordById("posts", id);
+        record.set("views", (record.get("views") || 0) + 1);
+        e.app.save(record);
+    } catch (err) {
+        return e.json(404, { error: "Post not found" });
+    }
+
+    return e.json(200, { success: true });
+});
