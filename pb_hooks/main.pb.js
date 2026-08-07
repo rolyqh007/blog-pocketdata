@@ -60,16 +60,16 @@ onRecordUpdateRequest((e) => {
 
 // This hook is triggered when a POST request is made to the "/api/posts/{id}/view" endpoint.
 routerAdd("POST", "/api/posts/{id}/view", (e) => {
-    // Get the post ID from the request path
+    e.response.header().set("Access-Control-Allow-Origin", "*");
+    
     const id = e.request.pathValue("id");
 
     try {
         const record = e.app.findRecordById("posts", id);
         record.set("views", (record.get("views") || 0) + 1);
-        e.app.save(record);
+        e.app.saveNoValidate(record);
+        return e.json(200, { success: true, id: id, newViews: record.get("views") });
     } catch (err) {
-        return e.json(404, { error: "Post not found" });
+        return e.json(404, { error: "Post not found", receivedId: id, errorDetail: err.message });
     }
-
-    return e.json(200, { success: true });
 });
