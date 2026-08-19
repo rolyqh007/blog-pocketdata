@@ -1,4 +1,4 @@
-# Blog basic in pocketbase (
+# Blog basic in pocketbase ( golang ) 
 
 ## started server 
 <img width="1536" height="683" alt="image" src="https://github.com/user-attachments/assets/4b7df868-98e0-403c-8288-680e4ca50435" />
