@@ -1,9 +1,9 @@
-# Blog basic in pocketdata
+# Blog basic in pocketbase (
 
 ## started server 
 <img width="1536" height="683" alt="image" src="https://github.com/user-attachments/assets/4b7df868-98e0-403c-8288-680e4ca50435" />
 
-## initial login in dashboard in pocketdata
+## initial login in dashboard in pocketbase
 <img width="1215" height="684" alt="image" src="https://github.com/user-attachments/assets/8ed38498-350e-461e-bbda-584189e978a7" />
 
 ## click in collection structure basic post
